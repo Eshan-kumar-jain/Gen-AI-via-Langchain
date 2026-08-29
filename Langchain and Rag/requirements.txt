@@ -17,6 +17,11 @@ google-generativeai
 langchain-huggingface
 transformers
 huggingface-hub
+sentence-transformers      # required by embedding_hf_local.py / embedding_hf_docs.py
+accelerate                 # required only when passing device_map to HuggingFacePipeline
+
+# Ollama Integration (local models)
+langchain-ollama
 
 # Environment Variable Management
 python-dotenv
