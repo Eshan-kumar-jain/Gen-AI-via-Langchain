@@ -1,0 +1,32 @@
+Introduction to Retrieval-Augmented Generation
+
+Retrieval-Augmented Generation, usually shortened to RAG, is a technique that combines a large language model with an external knowledge source. Instead of relying only on what the model learned during training, a RAG system first searches a collection of documents for passages related to the user's question, then passes those passages to the model as context. The model uses that context to write its answer.
+
+Why RAG Is Useful
+
+Language models have a fixed knowledge cutoff and can produce confident but incorrect answers, often called hallucinations. RAG reduces this problem by grounding answers in real documents. It also lets organisations use private data, such as internal manuals, policies or support tickets, without retraining the model. When the documents change, only the index needs updating.
+
+The Main Steps in a RAG Pipeline
+
+1. Loading: Documents are read from their source. A text loader reads plain .txt files, while other loaders handle PDFs, web pages, CSV files and databases.
+2. Splitting: Long documents are broken into smaller chunks, typically a few hundred to a thousand characters, with some overlap between chunks so that context is not lost at the boundaries.
+3. Embedding: Each chunk is converted into a numerical vector by an embedding model. Chunks with similar meaning end up close together in vector space.
+4. Storing: The vectors are saved in a vector database such as FAISS, Chroma or Pinecone.
+5. Retrieving: When a question arrives, it is embedded with the same model, and the most similar chunks are fetched from the vector store.
+6. Generating: The retrieved chunks and the question are combined into a prompt, and the language model produces the final answer.
+
+Choosing a Chunk Size
+
+Chunk size is a trade-off. Small chunks are precise but may lack enough context to answer a question. Large chunks carry more context but can dilute the relevant information and use more of the model's context window. A common starting point is 500 to 1000 characters with an overlap of 50 to 200 characters, adjusted after testing.
+
+Evaluating a RAG System
+
+A good RAG system should retrieve the right passages and produce answers that are faithful to them. Useful checks include retrieval precision (are the fetched chunks relevant?), answer faithfulness (does the answer stick to the retrieved text?) and answer relevance (does it actually address the question?). Tools such as RAGAS and MLflow evaluation can automate parts of this process.
+
+Common Pitfalls
+
+Poorly cleaned source text, such as repeated headers, page numbers or broken encoding, leads to noisy chunks and weaker retrieval. Using a different embedding model for indexing and querying will break similarity search. Retrieving too few chunks can miss the answer, while retrieving too many can confuse the model. Finally, prompts should instruct the model to say when the answer is not in the provided context, rather than guessing.
+
+Summary
+
+RAG is one of the most practical ways to build reliable question-answering applications on top of large language models. By loading, splitting, embedding, storing and retrieving documents before generation, it keeps answers grounded, up to date and specific to the data that matters.
